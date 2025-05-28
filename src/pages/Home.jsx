@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrendingUp, TrendingDown, DollarSign, BarChart3, PieChart, Activity, ArrowUpRight, ArrowDownRight, Eye, Bell, Settings, User } from 'lucide-react';
+import StockChart from '../components/StockChart';
+import { getStockData, subscribeToStockUpdates } from '../services/stockService';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -21,10 +23,39 @@ export default function Home() {
     { title: 'Market Cap', value: '$2.1T', change: '+1.8%', icon: PieChart, trend: 'up' }
   ]);
 
+  const [selectedStock, setSelectedStock] = useState('AAPL');
+  const [chartData, setChartData] = useState([]);
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const loadStockData = async () => {
+      try {
+        const data = await getStockData(selectedStock);
+        setChartData(data);
+      } catch (error) {
+        console.error('Error loading stock data:', error);
+      }
+    };
+
+    loadStockData();
+
+    // Subscribe to real-time updates
+    const unsubscribe = subscribeToStockUpdates(selectedStock, (newDataPoint) => {
+      setChartData(prevData => {
+        // Keep last 100 points
+        const newData = [...prevData.slice(-99), newDataPoint];
+        return newData;
+      });
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [selectedStock]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -113,59 +144,42 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Market Overview */}
-          <div className="backdrop-blur-md bg-white/10 rounded-xl p-8 border border-white/20 mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-white">Market Overview</h3>
-              <div className="flex space-x-2">
-                <button className="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-lg text-sm hover:bg-purple-500/30 transition-colors">
-                  1D
-                </button>
-                <button className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg text-sm hover:bg-white/20 transition-colors">
-                  1W
-                </button>
-                <button className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg text-sm hover:bg-white/20 transition-colors">
-                  1M
-                </button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {marketData.map((stock, index) => (
-                <div key={index} className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-all duration-200 cursor-pointer transform hover:scale-105">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-white font-semibold text-lg">{stock.symbol}</h4>
-                    <div className={`flex items-center space-x-1 text-sm ${stock.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      {stock.change >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                      <span>{stock.changePercent}%</span>
-                    </div>
-                  </div>
-                  <p className="text-2xl font-bold text-white mb-1">${stock.price}</p>
-                  <p className={`text-sm ${stock.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {stock.change >= 0 ? '+' : ''}${stock.change}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-2">Vol: {stock.volume}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="backdrop-blur-md bg-white/10 rounded-xl p-8 border border-white/20">
-              <h3 className="text-xl font-bold text-white mb-4">Quick Trade</h3>
-              <p className="text-gray-300 mb-6">Execute trades with advanced tools and real-time data</p>
-              <button className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-200 transform hover:scale-105">
-                Open Trading Terminal
-              </button>
-            </div>
-            
-            <div className="backdrop-blur-md bg-white/10 rounded-xl p-8 border border-white/20">
-              <h3 className="text-xl font-bold text-white mb-4">Market Analysis</h3>
-              <p className="text-gray-300 mb-6">Access comprehensive market research and insights</p>
-              <button className="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 transform hover:scale-105">
-                View Research Reports
-              </button>
+          {/* Market Overview Table */}
+          <div className="backdrop-blur-md bg-white/10 rounded-xl p-6 border border-white/20">
+            <h3 className="text-xl font-semibold text-white mb-6">Market Overview</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-gray-300 border-b border-white/10">
+                    <th className="text-left py-3 px-4">Symbol</th>
+                    <th className="text-right py-3 px-4">Price</th>
+                    <th className="text-right py-3 px-4">Change</th>
+                    <th className="text-right py-3 px-4">Change %</th>
+                    <th className="text-right py-3 px-4">Volume</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {marketData.map((stock, index) => (
+                    <tr
+                      key={stock.symbol}
+                      className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
+                      onClick={() => setSelectedStock(stock.symbol)}
+                    >
+                      <td className="py-3 px-4 text-white font-medium">{stock.symbol}</td>
+                      <td className="text-right py-3 px-4 text-white">${stock.price.toFixed(2)}</td>
+                      <td className={`text-right py-3 px-4 ${stock.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}
+                      </td>
+                      <td className={`text-right py-3 px-4 ${stock.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {stock.changePercent >= 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                      </td>
+                      <td className="text-right py-3 px-4 text-gray-300">{stock.volume}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </main>
