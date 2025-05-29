@@ -25,10 +25,9 @@ function LiveCandlestickChart() {
       padding: '24px',
       fontFamily: 'system-ui, -apple-system, sans-serif',
       color: 'white'
-    },
-    maxWidth: {
-      maxWidth: '1400px',
-      margin: '0 auto'
+    },    maxWidth: {
+      width: '100%',
+      margin: '0'
     },
     header: {
       textAlign: 'center',
@@ -97,8 +96,12 @@ function LiveCandlestickChart() {
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
-      transition: 'all 0.2s',
-      fontSize: '1rem'
+      transition: 'all 0.3s ease',
+      fontSize: '1rem',
+      '&:hover:not(:disabled)': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 10px 20px -5px rgba(0, 0, 0, 0.3)'
+      }
     },
     primaryButton: {
       backgroundColor: '#3b82f6',
@@ -146,7 +149,15 @@ function LiveCandlestickChart() {
       boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+        border: '1px solid rgba(148, 163, 184, 0.4)',
+        boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.3)'
+      }
     },
     statLabel: {
       fontSize: '0.875rem',
@@ -253,7 +264,14 @@ function LiveCandlestickChart() {
       borderRadius: '16px',
       border: '1px solid rgba(148, 163, 184, 0.2)',
       boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-      textAlign: 'center'
+      textAlign: 'center',
+      transition: 'all 0.3s ease',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+        border: '1px solid rgba(148, 163, 184, 0.4)',
+        boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.3)'
+      }
     },
     predictionTitle: {
       fontSize: '1.25rem',

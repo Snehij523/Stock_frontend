@@ -1,73 +1,102 @@
 import axios from 'axios';
 
-// Keep track of last prices to make updates more realistic
-const lastPrices = {
-  AAPL: 185.42,
-  GOOGL: 142.87,
-  MSFT: 378.91,
-  TSLA: 248.50,
-  AMZN: 156.78,
-  NVDA: 891.34
-};
+const API_BASE_URL = 'http://localhost:8000';
 
-// Simulate real-time data for development
-const generateMockData = (symbol, numPoints = 100) => {
-  const data = [];
-  const now = new Date();
-  let currentPrice = lastPrices[symbol] || 100;
-  
-  for (let i = 0; i < numPoints; i++) {
-    const time = new Date(now.getTime() - (numPoints - i) * 60000); // One minute intervals
-    // More realistic price movement (0.1% max change)
-    const randomChange = currentPrice * (Math.random() - 0.5) * 0.002;
-    currentPrice += randomChange;
-    
-    data.push({
-      time: Math.floor(time.getTime() / 1000), // Unix timestamp in seconds
-      value: currentPrice
+// Configure axios with debug logging
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,  // Increased timeout for debugging
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+  withCredentials: false // Disable credentials for CORS
+});
+
+// Add request/response logging
+api.interceptors.request.use(request => {
+  console.log('[API Request]:', {
+    url: request.url,
+    method: request.method,
+    headers: request.headers,
+    params: request.params,
+    data: request.data
+  });
+  return request;
+});
+
+api.interceptors.response.use(
+  response => {
+    console.log('[API Response]:', {
+      url: response.config.url,
+      status: response.status,
+      data: response.data
     });
+    return response;
+  },
+  error => {
+    console.error('[API Error]:', {
+      url: error.config?.url,
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
+    throw error;
   }
-  
-  // Update the last price
-  lastPrices[symbol] = currentPrice;
-  return data;
-};
+);
 
 // Get historical stock data
 export const getStockData = async (symbol) => {
+  console.log(`[getStockData] Fetching data for ${symbol}...`);
   try {
-    // TODO: Replace with actual API call
-    // For now, return mock data
-    const data = generateMockData(symbol);
-    return data;
+    const response = await api.get(`/historical?symbol=${symbol}`);
+    const transformed = response.data.data.map(item => ({
+      time: Math.floor(new Date(item.date).getTime() / 1000),
+      value: parseFloat(item.price)
+    }));
+    console.log(`[getStockData] Transformed data:`, transformed);
+    return transformed;
   } catch (error) {
-    console.error('Error fetching stock data:', error);
-    return [];
+    console.error(`[getStockData] Error:`, error);
+    throw error;
   }
 };
 
-// Get real-time stock updates
-export const subscribeToStockUpdates = (symbol, callback) => {
-  let currentPrice = lastPrices[symbol];
-  
-  // Simulate real-time updates every 2 seconds
-  const interval = setInterval(() => {
-    // Generate a small random price movement (0.1% max change)
-    const randomChange = currentPrice * (Math.random() - 0.5) * 0.002;
-    currentPrice += randomChange;
-    
-    // Update last price
-    lastPrices[symbol] = currentPrice;
-    
-    const now = new Date();
-    const newPoint = {
-      time: Math.floor(now.getTime() / 1000), // Unix timestamp in seconds
-      value: currentPrice
-    };
-    
-    callback(newPoint);
-  }, 2000);
+// Get stock price prediction
+export const getPrediction = async (symbol) => {
+  console.log(`[getPrediction] Fetching prediction for ${symbol}...`);
+  try {
+    const response = await api.get(`/predict?symbol=${symbol}`);
+    console.log(`[getPrediction] Response:`, response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`[getPrediction] Error:`, error);
+    throw error;
+  }
+};
 
-  // Return cleanup function
-  return () => clearInterval(interval);
+// Subscribe to real-time updates
+export const subscribeToStockUpdates = (symbol, callback) => {
+  console.log(`[subscribeToStockUpdates] Starting updates for ${symbol}`);
+  let lastUpdate = Date.now();
+  
+  const interval = setInterval(async () => {
+    try {
+      // Only fetch if it's been more than 4.5 seconds since last update
+      if (Date.now() - lastUpdate >= 4500) {
+        const data = await getStockData(symbol);
+        if (data.length > 0) {
+          lastUpdate = Date.now();
+          callback(data[data.length - 1]);
+        }
+      }
+    } catch (error) {
+      console.error(`[subscribeToStockUpdates] Error:`, error);
+    }
+  }, 5000);
+
+  return () => {
+    console.log(`[subscribeToStockUpdates] Stopping updates for ${symbol}`);
+    clearInterval(interval);
+  };
 };

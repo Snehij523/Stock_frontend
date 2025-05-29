@@ -1,14 +1,28 @@
-/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-gray-50;
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
   
-  h2 {
-    @apply text-gray-800;
+  body {
+    @apply bg-slate-900 text-white antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-md bg-white/10 rounded-xl border border-white/20;
+  }
+  
+  .nav-link {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+
+  .nav-link-active {
+    @apply bg-gradient-to-r from-purple-500 to-blue-500 text-white;
   }
 }

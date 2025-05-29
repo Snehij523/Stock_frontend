@@ -51,76 +51,74 @@ export default function About() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)' }}>
+    <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-900">
       {/* Hero Section */}
-      <div className="about-hero">
-        <div className={`about-hero-content ${isVisible ? 'fade-in-up' : ''}`}>
-          <div style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '0.5rem',
-            background: 'rgba(255, 255, 255, 0.2)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '50px',
-            padding: '0.75rem 1.5rem',
-            marginBottom: '2rem',
-            border: '1px solid rgba(255, 255, 255, 0.3)'
-          }}>
-            <Zap className="float" style={{ width: '20px', height: '20px', color: '#fbbf24' }} />
-            <span style={{ color: 'white', fontWeight: '600' }}>Next-Generation Trading Platform</span>
+      <div className="w-full min-h-[90vh] flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Background Glow Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-purple-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/4 w-[800px] h-[800px] bg-blue-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-3xl"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center w-full px-8">
+          <div className="inline-block mb-6">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-lg px-4 py-2 rounded-full text-purple-200">
+              <Zap className="w-4 h-4" />
+              <span>Next-Generation Trading Platform</span>
+            </div>
           </div>
-          
-          <h1 className="about-hero-title">
+
+          <h1 className="text-7xl font-bold mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
             StockDash
-            <span className="about-hero-subtitle">Professional Trading Suite</span>
           </h1>
           
-          <p className="about-hero-desc">
-            Revolutionizing stock market analysis with cutting-edge AI technology, real-time data visualization, 
-            and predictive analytics that empower traders to make informed investment decisions.
+          <h2 className="text-4xl font-semibold mb-6 text-white">
+            Professional Trading Suite
+          </h2>
+
+          <p className="text-xl text-purple-100 mb-12 max-w-3xl mx-auto">
+            Revolutionizing stock market analysis with cutting-edge AI technology, 
+            real-time data visualization, and predictive analytics that empower 
+            traders to make informed investment decisions.
           </p>
-          
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
-            <button className="about-btn-primary">
+
+          <div className="flex gap-6 justify-center">
+            <button className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg font-bold text-lg hover:from-purple-600 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 flex items-center gap-2">
               Start Free Trial
-              <ArrowRight style={{ width: '20px', height: '20px' }} />
+              <ArrowRight className="w-5 h-5" />
             </button>
-            <button className="about-btn-secondary">
+            <button className="px-8 py-4 bg-white/10 backdrop-blur-lg text-white rounded-lg font-bold text-lg hover:bg-white/20 transform hover:scale-105 transition-all duration-200">
               Watch Demo
             </button>
           </div>
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="stats-section">
-        <div className="stats-grid">
-          {stats.map((stat, index) => (
-            <div key={index} className={`stat-card ${isVisible ? 'fade-in-up' : ''}`} style={{ animationDelay: `${index * 0.1}s` }}>
-              <stat.icon style={{ width: '40px', height: '40px', color: '#3b82f6', margin: '0 auto 1rem' }} />
-              <div className="stat-number">{stat.number}</div>
-              <div className="stat-label">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Features Grid Section */}
+      <div className="w-full py-20 bg-gradient-to-b from-transparent to-indigo-950">
+        <div className="w-full px-8">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl font-bold text-white mb-4">
+              Powerful Features for Modern Trading
+            </h3>
+            <p className="text-purple-200 text-lg">
+              Everything you need to analyze, predict, and execute trades with confidence
+            </p>
+          </div>
 
-      {/* Features Section */}
-      <div className="features-section">
-        <div className="container">
-          <h2 className="section-title">Powerful Trading Features</h2>
-          <p className="section-subtitle">
-            Discover the advanced tools that make StockDash the preferred choice of professional traders worldwide.
-          </p>
-          
-          <div className="features-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-[2000px] mx-auto">
             {features.map((feature, index) => (
-              <div key={index} className="feature-card">
-                <div className="feature-icon">
-                  <feature.icon />
+              <div
+                key={index}
+                className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:transform hover:scale-105"
+              >
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                  <feature.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-desc">{feature.description}</p>
+                <h4 className="text-xl font-bold text-white mb-4">{feature.title}</h4>
+                <p className="text-purple-200">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -128,65 +126,68 @@ export default function About() {
       </div>
 
       {/* Benefits Section */}
-      <div className="benefits-section">
-        <div className="benefits-grid">
-          <div>
-            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
-              Why Choose StockDash?
-            </h2>
-            <p style={{ fontSize: '1.2rem', color: '#64748b', marginBottom: '2rem', lineHeight: '1.7' }}>
-              Built with modern technologies and designed for performance, our platform delivers 
-              exceptional user experience and reliable trading tools.
-            </p>
-            
-            <div className="benefits-list">
-              {benefits.map((benefit, index) => (
-                <div key={index} className="benefit-item">
-                  <CheckCircle style={{ width: '24px', height: '24px' }} />
-                  <span style={{ fontWeight: '500' }}>{benefit}</span>
-                </div>
-              ))}
+      <div className="w-full py-20">
+        <div className="w-full px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-[2000px] mx-auto">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Why Choose StockDash?
+              </h2>
+              <p className="text-purple-200 mb-8">
+                Built with modern technologies and designed for performance, our platform delivers 
+                exceptional user experience and reliable trading tools.
+              </p>
+              
+              <div className="space-y-4">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start gap-4 p-3 rounded-lg hover:bg-white/5 transition-all duration-300 group">
+                    <CheckCircle className="w-6 h-6 text-purple-400 group-hover:text-purple-300" />
+                    <span className="text-purple-100 group-hover:text-white transition-colors duration-300">{benefit}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          
-          <div className="tech-showcase">
-            <h3 style={{ fontSize: '1.8rem', fontWeight: '700', marginBottom: '1rem' }}>
-              Technology Stack
-            </h3>
-            <p style={{ opacity: '0.9', marginBottom: '2rem' }}>
-              Built with cutting-edge technologies for optimal performance
-            </p>
             
-            <div className="tech-grid">
-              {techStack.map((tech, index) => (
-                <div key={index} className="tech-item">
-                  <div style={{ fontWeight: '600', marginBottom: '0.5rem' }}>{tech.name}</div>
-                  <div style={{ fontSize: '0.9rem', opacity: '0.8' }}>{tech.desc}</div>
-                </div>
-              ))}
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Technology Stack
+              </h2>
+              <p className="text-purple-200 mb-8">
+                Built with cutting-edge technologies for optimal performance
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {techStack.map((tech, index) => (
+                  <div key={index} className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 hover:bg-white/10 transform hover:scale-105 transition-all duration-300">
+                    <div className="font-semibold text-white mb-2">{tech.name}</div>
+                    <div className="text-purple-200 text-sm group-hover:text-white">{tech.desc}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="container">
-        <div className="cta-section">
-          <h2 className="cta-title">Ready to Transform Your Trading?</h2>
-          <p className="cta-desc">
+      <div className="w-full py-20 bg-gradient-to-br from-purple-500 to-indigo-600">
+        <div className="w-full px-8">
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Ready to Transform Your Trading?
+          </h2>
+          <p className="text-purple-100 mb-8 max-w-3xl mx-auto">
             Join thousands of successful traders who trust StockDash for their investment decisions. 
             Start your free trial today and discover the future of trading.
           </p>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
+          <div className="flex gap-4 justify-center">
             <button 
-              className="about-btn-primary"
-              style={{ background: 'white', color: '#e91e63' }}
+              className="px-8 py-4 bg-white text-purple-600 rounded-lg font-bold text-lg shadow-md hover:bg-white/90 transition-all duration-200 flex items-center gap-2"
             >
               Start Free Trial
-              <ArrowRight style={{ width: '20px', height: '20px' }} />
+              <ArrowRight className="w-5 h-5" />
             </button>
-            <button className="about-btn-secondary">
+            <button className="px-8 py-4 bg-purple-700 text-white rounded-lg font-bold text-lg hover:bg-purple-800 transition-all duration-200">
               Contact Sales
             </button>
           </div>

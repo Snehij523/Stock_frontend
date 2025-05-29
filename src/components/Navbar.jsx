@@ -9,8 +9,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 backdrop-blur-xl bg-gradient-to-r from-slate-900/95 via-purple-900/95 to-slate-900/95 border-b border-white/20 shadow-lg">
-      <div className="container mx-auto px-6 py-4">
+    <div className="sticky top-0 z-50 backdrop-blur-xl bg-gradient-to-r from-slate-900/95 via-purple-900/95 to-slate-900/95 border-b border-white/20 shadow-lg">      <div className="w-full px-8 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-4 group">
             <div className="p-2.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
