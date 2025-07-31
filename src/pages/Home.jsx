@@ -42,8 +42,8 @@ export default function Home() {
                 <div className="text-right">
                   <p className="text-sm text-gray-300">Market Status</p>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-green-400 text-sm font-medium">OPEN</span>
+                    <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                    <span className="text-red-400 text-sm font-medium">Closed</span>
                   </div>
                 </div>
                 

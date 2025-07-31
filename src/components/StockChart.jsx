@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+/*import React, { useEffect, useRef } from 'react';
 import { createChart } from 'lightweight-charts';
 
 function StockChart({ data }) {
@@ -106,5 +106,55 @@ function StockChart({ data }) {
     />
   );
 }
+
+export default StockChart;
+*/
+import React, { useEffect, useRef, useState } from 'react';
+import { createChart } from 'lightweight-charts';
+import { getStockData } from '../services/stockService';
+
+const StockChart = ({ symbol }) => {
+  const chartContainerRef = useRef(null);
+  const chartRef = useRef(null);
+  const lineSeriesRef = useRef(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!symbol) return;
+
+    const loadData = async () => {
+      try {
+        const data = await getStockData(symbol);
+        if (data.length > 0) {
+          lineSeriesRef.current.setData(data);
+          chartRef.current.timeScale().fitContent();
+        }
+      } catch (err) {
+        setError('Failed to load stock data');
+      }
+    };
+
+    loadData();
+  }, [symbol]);
+
+  useEffect(() => {
+    chartRef.current = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height: 400,
+      layout: { background: { color: '#ffffff' }, textColor: '#333' },
+      grid: { vertLines: { color: '#eee' }, horzLines: { color: '#eee' } },
+    });
+
+    lineSeriesRef.current = chartRef.current.addLineSeries();
+    return () => chartRef.current.remove();
+  }, []);
+
+  return (
+    <div>
+      {error && <p className="text-red-500">{error}</p>}
+      <div ref={chartContainerRef} style={{ width: '100%', height: '400px' }} />
+    </div>
+  );
+};
 
 export default StockChart;
