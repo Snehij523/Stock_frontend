@@ -1,12 +1,25 @@
-# React + Vite
+Stock Price Prediction Dashboard (Frontend)
+A modern and interactive React-based frontend for a Stock Price Prediction System. This dashboard allows users to input stock symbols and view predicted prices in a clean and responsive UI. Built using React, HTML, CSS, and JavaScript, and designed to integrate seamlessly with a backend prediction API (FastAPI/Flask with ML models).
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🧩 Features
+🔍 Input form for stock symbol
 
-Currently, two official plugins are available:
+📊 Displays predicted stock prices
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+⚛️ Built with React for dynamic UI rendering
 
-## Expanding the ESLint configuration
+🎨 Responsive design using custom CSS
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🌐 Easily integrates with ML-powered backend APIs
+
+💡 Tech Stack
+React.js – component-based architecture and UI
+
+HTML5 – markup structure
+
+CSS3 – styling and layout
+
+JavaScript  – logic and interactivity
+
+Fetch API – for backend communication 
+
